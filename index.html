@@ -321,11 +321,6 @@
                          data-ad-slot="3870932676"
                          data-ad-format="auto"
                          data-full-width-responsive="true"></ins>
-                    <!-- AdSense 승인 전 임시 표시 -->
-                    <div style="background: #f0f0f0; padding: 20px; text-align: center; border: 2px dashed #ccc; margin: 10px 0;">
-                        <p style="color: #666; font-size: 14px;">📢 광고 영역</p>
-                        <p style="color: #999; font-size: 12px;">AdSense 승인 후 광고가 표시됩니다</p>
-                    </div>
                 </div>
 
                 <!-- 여성 정보 섹션 -->
@@ -565,14 +560,9 @@
                 }
             });
             
-            // AdSense 승인 후 임시 표시 숨기기
+            // 광고 로딩 확인
             setTimeout(function() {
-                const tempAds = document.querySelectorAll('.ad-container div[style*="background: #f0f0f0"]');
-                tempAds.forEach(function(ad) {
-                    if (ad.textContent.includes('📢 광고 영역')) {
-                        ad.style.display = 'none';
-                    }
-                });
+                console.log('AdSense 광고 로딩 완료');
             }, 3000);
         });
     </script>

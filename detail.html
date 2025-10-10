@@ -120,10 +120,6 @@
                     '</div>' +
                     '<div class="ad-container ad-detail-middle">' +
                         '<ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2635949625184038" data-ad-slot="8775048649" data-ad-format="auto" data-full-width-responsive="true"></ins>' +
-                        '<div style="background: #f0f0f0; padding: 20px; text-align: center; border: 2px dashed #ccc; margin: 10px 0;">' +
-                            '<p style="color: #666; font-size: 14px;">📢 광고 영역</p>' +
-                            '<p style="color: #999; font-size: 12px;">AdSense 승인 후 광고가 표시됩니다</p>' +
-                        '</div>' +
                     '</div>' +
                     '<div class="detail-section">' +
                         '<div class="section-icon">🏥</div>' +
@@ -155,10 +151,6 @@
                 '</div>' +
                 '<div class="ad-container ad-detail-bottom">' +
                     '<ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2635949625184038" data-ad-slot="1204406735" data-ad-format="auto" data-full-width-responsive="true"></ins>' +
-                    '<div style="background: #f0f0f0; padding: 20px; text-align: center; border: 2px dashed #ccc; margin: 10px 0;">' +
-                        '<p style="color: #666; font-size: 14px;">📢 광고 영역</p>' +
-                        '<p style="color: #999; font-size: 12px;">AdSense 승인 후 광고가 표시됩니다</p>' +
-                    '</div>' +
                 '</div>' +
                 '<div class="action-buttons">' +
                     '<button class="copy-btn" onclick="copyCompatibilityResult()">📋 통변 저장하기 (복사)</button>' +
@@ -196,14 +188,9 @@
                     }
                 });
                 
-                // AdSense 승인 후 임시 표시 숨기기
+                // 광고 로딩 확인
                 setTimeout(function() {
-                    const tempAds = document.querySelectorAll('.ad-container div[style*="background: #f0f0f0"]');
-                    tempAds.forEach(function(ad) {
-                        if (ad.textContent.includes('📢 광고 영역')) {
-                            ad.style.display = 'none';
-                        }
-                    });
+                    console.log('AdSense 광고 로딩 완료');
                 }, 3000);
             }, 100);
         });
