@@ -563,7 +563,7 @@
     
     <!-- 광고 스크립트 실행 -->
     <script>
-        // AdSense 스크립트 로드 완료 후 광고 초기화
+        // AdSense 스크립트 로드 완료 후 광고 초기화 (모바일 최적화)
         (function() {
             function initAds() {
                 try {
@@ -571,10 +571,35 @@
                     const ads = document.querySelectorAll('.adsbygoogle');
                     console.log('발견된 광고 개수:', ads.length);
                     
+                    if (ads.length === 0) {
+                        console.warn('광고 요소를 찾을 수 없습니다');
+                        return;
+                    }
+                    
+                    // 모바일에서 광고 요소 가시성 확인
                     ads.forEach(function(ad, index) {
                         try {
-                            console.log('광고 초기화 중:', index + 1);
+                            // 광고 요소가 화면에 보이는지 확인
+                            const rect = ad.getBoundingClientRect();
+                            const isVisible = rect.top >= 0 && rect.left >= 0 && 
+                                            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && 
+                                            rect.right <= (window.innerWidth || document.documentElement.clientWidth);
+                            
+                            console.log(`광고 ${index + 1} 초기화 중 (가시성: ${isVisible})`);
+                            
+                            // AdSense 초기화
                             (adsbygoogle = window.adsbygoogle || []).push({});
+                            
+                            // 모바일에서 광고 로딩 확인
+                            setTimeout(function() {
+                                const adFrame = ad.querySelector('iframe');
+                                if (adFrame) {
+                                    console.log(`광고 ${index + 1} 로딩 완료`);
+                                } else {
+                                    console.warn(`광고 ${index + 1} 로딩 실패`);
+                                }
+                            }, 2000);
+                            
                         } catch (e) {
                             console.error('광고 초기화 실패:', index + 1, e);
                         }
@@ -586,16 +611,45 @@
                 }
             }
             
+            // 모바일에서 더 빠른 초기화
+            function initAdsMobile() {
+                if (typeof adsbygoogle !== 'undefined') {
+                    initAds();
+                } else {
+                    setTimeout(initAdsMobile, 100);
+                }
+            }
+            
             // 페이지 로드 완료 후 광고 초기화
             if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', initAds);
+                document.addEventListener('DOMContentLoaded', initAdsMobile);
             } else {
-                initAds();
+                initAdsMobile();
             }
             
             // 추가로 window.load 이벤트에서도 실행
             window.addEventListener('load', function() {
-                setTimeout(initAds, 1000);
+                setTimeout(initAds, 500);
+                setTimeout(initAds, 2000);
+            });
+            
+            // 스크롤 시 광고 재초기화 (모바일에서 중요)
+            let scrollTimeout;
+            window.addEventListener('scroll', function() {
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(function() {
+                    const hiddenAds = document.querySelectorAll('.adsbygoogle:not(:has(iframe))');
+                    if (hiddenAds.length > 0) {
+                        console.log('스크롤 감지 - 숨겨진 광고 재초기화:', hiddenAds.length);
+                        hiddenAds.forEach(function(ad) {
+                            try {
+                                (adsbygoogle = window.adsbygoogle || []).push({});
+                            } catch (e) {
+                                console.error('스크롤 광고 재초기화 실패:', e);
+                            }
+                        });
+                    }
+                }, 1000);
             });
         })();
     </script>

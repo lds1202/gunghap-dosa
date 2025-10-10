@@ -187,16 +187,32 @@
                 });
             }
             
-            // AdSense 스크립트 실행 - 모든 광고 슬롯 활성화
+            // AdSense 스크립트 실행 - 모든 광고 슬롯 활성화 (모바일 최적화)
             function initDetailAds() {
                 try {
                     const ads = document.querySelectorAll('.adsbygoogle');
                     console.log('Detail 페이지 - 발견된 광고 개수:', ads.length);
                     
+                    if (ads.length === 0) {
+                        console.warn('Detail - 광고 요소를 찾을 수 없습니다');
+                        return;
+                    }
+                    
                     ads.forEach(function(ad, index) {
                         try {
-                            console.log('Detail 광고 초기화 중:', index + 1);
+                            // 광고 가시성 확인
+                            const rect = ad.getBoundingClientRect();
+                            const isVisible = rect.top >= 0 && rect.left >= 0;
+                            
+                            console.log(`Detail 광고 ${index + 1} 초기화 중 (가시성: ${isVisible})`);
                             (adsbygoogle = window.adsbygoogle || []).push({});
+                            
+                            // 광고 로딩 확인
+                            setTimeout(function() {
+                                const adFrame = ad.querySelector('iframe');
+                                console.log(`Detail 광고 ${index + 1} 로딩 ${adFrame ? '완료' : '실패'}`);
+                            }, 2000);
+                            
                         } catch (e) {
                             console.error('Detail 광고 초기화 실패:', index + 1, e);
                         }
@@ -208,11 +224,21 @@
                 }
             }
             
-            // HTML 삽입 후 광고 초기화
-            setTimeout(initDetailAds, 500);
+            // HTML 삽입 후 즉시 광고 초기화
+            setTimeout(function() {
+                if (typeof adsbygoogle !== 'undefined') {
+                    initDetailAds();
+                } else {
+                    console.log('Detail - AdSense 스크립트 로드 대기 중...');
+                    setTimeout(initDetailAds, 200);
+                }
+            }, 100);
             
-            // 추가 초기화 (혹시 놓친 경우)
+            // 추가 초기화 (다중 시도)
+            setTimeout(initDetailAds, 500);
+            setTimeout(initDetailAds, 1000);
             setTimeout(initDetailAds, 2000);
+            setTimeout(initDetailAds, 4000);
         });
         
         // 링크 복사 함수
