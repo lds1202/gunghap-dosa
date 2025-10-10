@@ -8,36 +8,11 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('sajuAnalyzer 전역 변수:', typeof sajuAnalyzer);
     console.log('window.sajuAnalyzer:', typeof window.sajuAnalyzer);
     
-    // 이름 입력 필드 최적화 (모바일 호환성 개선)
+    // 이름 입력 필드 - 간단하게만 처리
     const nameInputs = document.querySelectorAll('#male_name, #female_name');
     nameInputs.forEach(input => {
-        // 모든 제약 완전히 제거
         input.removeAttribute('readonly');
         input.removeAttribute('disabled');
-        input.style.pointerEvents = 'auto';
-        input.style.userSelect = 'text';
-        input.style.webkitUserSelect = 'text';
-        
-        // autocomplete 설정
-        input.setAttribute('autocomplete', 'off');
-        input.setAttribute('inputmode', 'text');
-        
-        // 포커스 이벤트
-        input.addEventListener('focus', function() {
-            this.removeAttribute('readonly');
-            this.removeAttribute('disabled');
-            console.log('이름 입력 필드 포커스:', this.id);
-        });
-        
-        // 입력 테스트 (디버깅용)
-        input.addEventListener('input', function(e) {
-            console.log('입력 감지:', this.id, '값:', this.value);
-        });
-        
-        // 키 입력 테스트 (디버깅용)
-        input.addEventListener('keydown', function(e) {
-            console.log('키 입력:', e.key);
-        });
     });
     
     const form = document.getElementById('compatibilityForm');
@@ -254,28 +229,8 @@ timeInputs.forEach(input => {
     }, { once: true });
 });
 
-// 이름 입력 시 한글/영문만 허용 (개선된 버전)
-// DOMContentLoaded 이후에 실행되도록 이동
-document.addEventListener('DOMContentLoaded', function() {
-    const nameFields = document.querySelectorAll('#male_name, #female_name');
-    nameFields.forEach(input => {
-        // 입력 이벤트에서 특수문자만 제거 (입력 자체는 허용)
-        input.addEventListener('input', function(e) {
-            const cursorPosition = this.selectionStart;
-            const originalLength = this.value.length;
-            
-            // 한글, 영문, 공백만 허용
-            this.value = this.value.replace(/[^가-힣a-zA-Z\s]/g, '');
-            
-            // 커서 위치 유지
-            const newLength = this.value.length;
-            const diff = originalLength - newLength;
-            this.setSelectionRange(cursorPosition - diff, cursorPosition - diff);
-            
-            console.log('이름 필터링 후:', this.id, '값:', this.value);
-        });
-    });
-}, { once: false });
+// 이름 입력 실시간 필터링 제거 (한글 조합 문제 해결)
+// 필요시 폼 제출 시점에 검증하면 충분함
 
 // 모바일 터치 이벤트 개선
 if ('ontouchstart' in window) {
