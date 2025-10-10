@@ -340,6 +340,18 @@ input[type="text"] {
     -webkit-appearance: none !important;
     -moz-appearance: none !important;
     appearance: none !important;
+    pointer-events: auto !important;
+    touch-action: manipulation !important;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* 이름 입력 필드 추가 최적화 */
+#male_name,
+#female_name {
+    cursor: text !important;
+    pointer-events: auto !important;
+    user-select: text !important;
+    -webkit-user-select: text !important;
 }
 
 input[type="text"]:focus,
