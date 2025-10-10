@@ -33,6 +33,16 @@
     </script>
     
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2635949625184038" crossorigin="anonymous"></script>
+    <script>
+        // AdSense 스크립트 로드 완료 확인
+        window.addEventListener('load', function() {
+            if (typeof adsbygoogle === 'undefined') {
+                console.log('Summary - AdSense 스크립트 로드 대기 중...');
+            } else {
+                console.log('Summary - AdSense 스크립트 로드 완료');
+            }
+        });
+    </script>
     <link rel="stylesheet" href="static/style.css">
 </head>
 <body>
@@ -215,21 +225,31 @@
             container.innerHTML = htmlContent;
             
             // AdSense 스크립트 실행 - 모든 광고 슬롯 활성화
-            setTimeout(function() {
-                const ads = document.querySelectorAll('.adsbygoogle');
-                ads.forEach(function(ad) {
-                    try {
-                        (adsbygoogle = window.adsbygoogle || []).push({});
-                    } catch (e) {
-                        console.error('AdSense 광고 로드 실패:', e);
-                    }
-                });
-                
-                // 광고 로딩 확인
-                setTimeout(function() {
-                    console.log('AdSense 광고 로딩 완료');
-                }, 3000);
-            }, 100);
+            function initSummaryAds() {
+                try {
+                    const ads = document.querySelectorAll('.adsbygoogle');
+                    console.log('Summary 페이지 - 발견된 광고 개수:', ads.length);
+                    
+                    ads.forEach(function(ad, index) {
+                        try {
+                            console.log('Summary 광고 초기화 중:', index + 1);
+                            (adsbygoogle = window.adsbygoogle || []).push({});
+                        } catch (e) {
+                            console.error('Summary 광고 초기화 실패:', index + 1, e);
+                        }
+                    });
+                    
+                    console.log('Summary AdSense 광고 초기화 완료');
+                } catch (e) {
+                    console.error('Summary AdSense 초기화 오류:', e);
+                }
+            }
+            
+            // HTML 삽입 후 광고 초기화
+            setTimeout(initSummaryAds, 500);
+            
+            // 추가 초기화 (혹시 놓친 경우)
+            setTimeout(initSummaryAds, 2000);
             
             // Google Analytics 이벤트: 요약 페이지 도달
             if (typeof gtag !== 'undefined') {

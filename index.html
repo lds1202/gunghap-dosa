@@ -50,6 +50,21 @@
     
     <!-- Google AdSense 사이트 연결 코드 -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2635949625184038" crossorigin="anonymous"></script>
+    <script>
+        // AdSense 스크립트 로드 완료 확인
+        window.addEventListener('load', function() {
+            if (typeof adsbygoogle === 'undefined') {
+                console.log('AdSense 스크립트 로드 대기 중...');
+                setTimeout(function() {
+                    if (typeof adsbygoogle !== 'undefined') {
+                        console.log('AdSense 스크립트 로드 완료');
+                    } else {
+                        console.error('AdSense 스크립트 로드 실패');
+                    }
+                }, 2000);
+            }
+        });
+    </script>
     
     <link rel="stylesheet" href="static/style.css">
 </head>
@@ -548,23 +563,41 @@
     
     <!-- 광고 스크립트 실행 -->
     <script>
-        // 페이지 로드 후 모든 광고 활성화
-        window.addEventListener('load', function() {
-            // 모든 adsbygoogle 요소 찾기
-            const ads = document.querySelectorAll('.adsbygoogle');
-            ads.forEach(function(ad) {
+        // AdSense 스크립트 로드 완료 후 광고 초기화
+        (function() {
+            function initAds() {
                 try {
-                    (adsbygoogle = window.adsbygoogle || []).push({});
+                    // 모든 adsbygoogle 요소 찾기
+                    const ads = document.querySelectorAll('.adsbygoogle');
+                    console.log('발견된 광고 개수:', ads.length);
+                    
+                    ads.forEach(function(ad, index) {
+                        try {
+                            console.log('광고 초기화 중:', index + 1);
+                            (adsbygoogle = window.adsbygoogle || []).push({});
+                        } catch (e) {
+                            console.error('광고 초기화 실패:', index + 1, e);
+                        }
+                    });
+                    
+                    console.log('AdSense 광고 초기화 완료');
                 } catch (e) {
-                    console.error('AdSense 광고 로드 실패:', e);
+                    console.error('AdSense 초기화 오류:', e);
                 }
-            });
+            }
             
-            // 광고 로딩 확인
-            setTimeout(function() {
-                console.log('AdSense 광고 로딩 완료');
-            }, 3000);
-        });
+            // 페이지 로드 완료 후 광고 초기화
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initAds);
+            } else {
+                initAds();
+            }
+            
+            // 추가로 window.load 이벤트에서도 실행
+            window.addEventListener('load', function() {
+                setTimeout(initAds, 1000);
+            });
+        })();
     </script>
 </body>
 </html>
