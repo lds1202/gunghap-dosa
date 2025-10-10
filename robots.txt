@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://1icarus.com/gunghap-dosa/sitemap.xml
+
+
+
+

@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>상세 궁합 풀이 - 궁합도사</title>
+    
+    <!-- SEO 메타 태그 -->
+    <link rel="canonical" href="https://1icarus.com/gunghap-dosa/detail.html">
+    <meta name="robots" content="noindex, nofollow">
+    
+    <!-- Google Fonts - 한글 세리프 폰트 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-HCWXTWEK1J"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-HCWXTWEK1J');
+    </script>
+    
+    <!-- Microsoft Clarity -->
+    <script type="text/javascript">
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "tmue9ya7ho");
+    </script>
+    
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2635949625184038" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="logo">🔮 궁합도사</h1>
+        </header>
+
+        <main class="main-content">
+            <div id="detailContainer" class="detail-container fade-in">
+                <!-- JavaScript로 동적 생성 -->
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2025 궁합도사. All rights reserved.</p>
+            <p class="disclaimer">
+                <small>* 본 궁합 결과는 전통 사주학을 기반으로 한 참고용 정보이며, 실제 관계에는 다양한 요인이 영향을 미칠 수 있습니다.</small>
+            </p>
+        </footer>
+    </div>
+
+    <script src="saju-analyzer.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Detail 페이지 로드 완료');
+            
+            // localStorage에서 결과 가져오기
+            const resultString = localStorage.getItem('compatibilityResult');
+            
+            if (!resultString) {
+                alert('궁합 결과가 없습니다. 다시 분석해주세요.');
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            let result;
+            try {
+                result = JSON.parse(resultString);
+                console.log('상세 페이지에서 로드된 결과:', result);
+            } catch (error) {
+                console.error('결과 파싱 오류:', error);
+                alert('결과 데이터가 손상되었습니다. 다시 분석해주세요.');
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            if (!result || !result.score || !result.maleName || !result.femaleName) {
+                console.error('결과 데이터가 불완전합니다:', result);
+                alert('결과 데이터가 불완전합니다. 다시 분석해주세요.');
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            // 컨테이너 요소 가져오기
+            const container = document.getElementById('detailContainer');
+            if (!container) {
+                console.error('detailContainer를 찾을 수 없습니다.');
+                return;
+            }
+            
+            // HTML 생성
+            const htmlContent = 
+                '<div class="detail-header">' +
+                    '<h2>상세 궁합 풀이</h2>' +
+                    '<div class="couple-names">' +
+                        '<span class="name male-name">' + result.maleName + '</span>' +
+                        '<span class="heart">💕</span>' +
+                        '<span class="name female-name">' + result.femaleName + '</span>' +
+                    '</div>' +
+                    '<div class="score-badge">' +
+                        '궁합 점수: <strong>' + result.score + '점</strong>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="detail-sections">' +
+                    '<div class="detail-section">' +
+                        '<div class="section-icon">💕</div>' +
+                        '<h3 class="section-title">애정운</h3>' +
+                        '<p class="section-content">' + result.details.love + '</p>' +
+                    '</div>' +
+                    '<div class="detail-section">' +
+                        '<div class="section-icon">💰</div>' +
+                        '<h3 class="section-title">재물운</h3>' +
+                        '<p class="section-content">' + result.details.wealth + '</p>' +
+                    '</div>' +
+                    '<div class="ad-container ad-detail-middle">' +
+                        '<ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2635949625184038" data-ad-slot="8775048649" data-ad-format="auto" data-full-width-responsive="true"></ins>' +
+                        '<div style="background: #f0f0f0; padding: 20px; text-align: center; border: 2px dashed #ccc; margin: 10px 0;">' +
+                            '<p style="color: #666; font-size: 14px;">📢 광고 영역</p>' +
+                            '<p style="color: #999; font-size: 12px;">AdSense 승인 후 광고가 표시됩니다</p>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="detail-section">' +
+                        '<div class="section-icon">🏥</div>' +
+                        '<h3 class="section-title">건강운</h3>' +
+                        '<p class="section-content">' + result.details.health + '</p>' +
+                    '</div>' +
+                    '<div class="detail-section">' +
+                        '<div class="section-icon">👶</div>' +
+                        '<h3 class="section-title">자녀운</h3>' +
+                        '<p class="section-content">' + result.details.children + '</p>' +
+                    '</div>' +
+                    '<div class="detail-section highlight">' +
+                        '<div class="section-icon">⭐</div>' +
+                        '<h3 class="section-title">궁합 총평</h3>' +
+                        '<p class="section-content">' + result.details.overall + '</p>' +
+                    '</div>' +
+                    '<div class="detail-section complement-section">' +
+                        '<div class="section-icon">🔄</div>' +
+                        '<h3 class="section-title">서로의 단점 보완법</h3>' +
+                        '<div class="complement-content">' +
+                            '<div class="complement-box male-complement">' +
+                                '<p class="section-content">' + result.complement.male + '</p>' +
+                            '</div>' +
+                            '<div class="complement-box female-complement">' +
+                                '<p class="section-content">' + result.complement.female + '</p>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="ad-container ad-detail-bottom">' +
+                    '<ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2635949625184038" data-ad-slot="1204406735" data-ad-format="auto" data-full-width-responsive="true"></ins>' +
+                    '<div style="background: #f0f0f0; padding: 20px; text-align: center; border: 2px dashed #ccc; margin: 10px 0;">' +
+                        '<p style="color: #666; font-size: 14px;">📢 광고 영역</p>' +
+                        '<p style="color: #999; font-size: 12px;">AdSense 승인 후 광고가 표시됩니다</p>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="action-buttons">' +
+                    '<button class="copy-btn" onclick="copyCompatibilityResult()">📋 통변 저장하기 (복사)</button>' +
+                    '<a href="summary.html" class="back-btn" onclick="trackEvent(\'back_to_summary\', \'요약으로 돌아가기 클릭\')">⬅️ 요약으로 돌아가기</a>' +
+                    '<a href="index.html" class="home-btn" onclick="trackEvent(\'new_compatibility\', \'새로운 궁합 보기 클릭\')">🏠 새로운 궁합 보기</a>' +
+                '</div>' +
+                '<div class="share-section">' +
+                    '<h4>📢 이 결과가 마음에 드셨나요?</h4>' +
+                    '<p>친구들에게도 궁합도사를 추천해주세요!</p>' +
+                    '<div class="share-buttons">' +
+                        '<button class="share-btn" onclick="copyLink()">🔗 링크 복사</button>' +
+                    '</div>' +
+                '</div>';
+            
+            // HTML 삽입
+            container.innerHTML = htmlContent;
+            
+            // Google Analytics 이벤트: 상세 페이지 도달
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'page_view', {
+                    page_title: 'Detail Page',
+                    page_location: window.location.href,
+                    compatibility_score: result.score
+                });
+            }
+            
+            // AdSense 스크립트 실행 - 모든 광고 슬롯 활성화
+            setTimeout(function() {
+                const ads = document.querySelectorAll('.adsbygoogle');
+                ads.forEach(function(ad) {
+                    try {
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                    } catch (e) {
+                        console.error('AdSense 광고 로드 실패:', e);
+                    }
+                });
+                
+                // AdSense 승인 후 임시 표시 숨기기
+                setTimeout(function() {
+                    const tempAds = document.querySelectorAll('.ad-container div[style*="background: #f0f0f0"]');
+                    tempAds.forEach(function(ad) {
+                        if (ad.textContent.includes('📢 광고 영역')) {
+                            ad.style.display = 'none';
+                        }
+                    });
+                }, 3000);
+            }, 100);
+        });
+        
+        // 링크 복사 함수
+        function copyLink() {
+            // Google Analytics 이벤트: 링크 복사
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'share', {
+                    event_category: 'engagement',
+                    event_label: '링크 복사'
+                });
+            }
+            
+            const url = window.location.origin + '/index.html';
+            
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(url).then(function() {
+                    alert('링크가 복사되었습니다! 📋');
+                }).catch(function() {
+                    alert('링크 복사에 실패했습니다.');
+                });
+            } else {
+                alert('이 브라우저에서는 링크 복사를 지원하지 않습니다.');
+            }
+        }
+        
+        // 천간지지 한글 변환 매핑
+        const hanjaToKorean = {
+            '甲': '갑', '乙': '을', '丙': '병', '丁': '정', '戊': '무',
+            '己': '기', '庚': '경', '辛': '신', '壬': '임', '癸': '계',
+            '子': '자', '丑': '축', '寅': '인', '卯': '묘', '辰': '진',
+            '巳': '사', '午': '오', '未': '미', '申': '신', '酉': '유',
+            '戌': '술', '亥': '해'
+        };
+        
+        // 한자를 한글로 변환
+        function convertToKorean(hanja) {
+            return hanja.split('').map(char => hanjaToKorean[char] || char).join('');
+        }
+        
+        // 이벤트 추적 헬퍼 함수
+        function trackEvent(eventName, eventLabel) {
+            if (typeof gtag !== 'undefined') {
+                gtag('event', eventName, {
+                    event_category: 'button_click',
+                    event_label: eventLabel
+                });
+            }
+        }
+        
+        // 통변 전체 내용 복사 함수
+        function copyCompatibilityResult() {
+            // Google Analytics 이벤트: 통변 복사
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'copy_result', {
+                    event_category: 'engagement',
+                    event_label: '통변 저장하기 클릭'
+                });
+            }
+            
+            const resultString = localStorage.getItem('compatibilityResult');
+            if (!resultString) {
+                alert('저장할 결과가 없습니다.');
+                return;
+            }
+            
+            const result = JSON.parse(resultString);
+            
+            // 복사할 텍스트 생성
+            let text = '═══════════════════════════════\n';
+            text += '🔮 궁합도사 - 사주 궁합 통변\n';
+            text += '═══════════════════════════════\n\n';
+            
+            // 기본 정보
+            text += '【 기본 정보 】\n';
+            text += '궁합 점수: ' + result.score + '점\n\n';
+            
+            // 남성 사주팔자
+            text += '👨 ' + result.maleName + '님의 사주팔자\n';
+            text += '연주(年柱): ' + result.maleSaju.year + ' (' + convertToKorean(result.maleSaju.year) + ')\n';
+            text += '월주(月柱): ' + result.maleSaju.month + ' (' + convertToKorean(result.maleSaju.month) + ')\n';
+            text += '일주(日柱): ' + result.maleSaju.day + ' (' + convertToKorean(result.maleSaju.day) + ')\n';
+            text += '시주(時柱): ' + result.maleSaju.time + ' (' + convertToKorean(result.maleSaju.time) + ')\n\n';
+            
+            // 여성 사주팔자
+            text += '👩 ' + result.femaleName + '님의 사주팔자\n';
+            text += '연주(年柱): ' + result.femaleSaju.year + ' (' + convertToKorean(result.femaleSaju.year) + ')\n';
+            text += '월주(月柱): ' + result.femaleSaju.month + ' (' + convertToKorean(result.femaleSaju.month) + ')\n';
+            text += '일주(日柱): ' + result.femaleSaju.day + ' (' + convertToKorean(result.femaleSaju.day) + ')\n';
+            text += '시주(時柱): ' + result.femaleSaju.time + ' (' + convertToKorean(result.femaleSaju.time) + ')\n\n';
+            
+            text += '═══════════════════════════════\n';
+            text += '【 상세 궁합 풀이 】\n';
+            text += '═══════════════════════════════\n\n';
+            
+            // 애정운
+            text += '💕 애정운\n';
+            text += '─────────────────────────────\n';
+            text += result.details.love + '\n\n';
+            
+            // 재물운
+            text += '💰 재물운\n';
+            text += '─────────────────────────────\n';
+            text += result.details.wealth + '\n\n';
+            
+            // 건강운
+            text += '🏥 건강운\n';
+            text += '─────────────────────────────\n';
+            text += result.details.health + '\n\n';
+            
+            // 자녀운
+            text += '👶 자녀운\n';
+            text += '─────────────────────────────\n';
+            text += result.details.children + '\n\n';
+            
+            // 궁합 총평
+            text += '⭐ 궁합 총평\n';
+            text += '─────────────────────────────\n';
+            text += result.details.overall + '\n\n';
+            
+            // 서로의 단점 보완법
+            text += '🔄 서로의 단점 보완법\n';
+            text += '─────────────────────────────\n';
+            text += result.complement.male + '\n\n';
+            text += result.complement.female + '\n\n';
+            
+            text += '═══════════════════════════════\n';
+            text += '궁합도사 - 전통 사주 기반 궁합 분석 서비스\n';
+            text += '출처: https://gunghap-dosa.netlify.app/\n';
+            text += '═══════════════════════════════';
+            
+            // 클립보드에 복사
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(function() {
+                    alert('✅ 복사가 완료되었습니다!\n\n다른 곳에 붙여넣으세요. 📋');
+                }).catch(function(err) {
+                    console.error('복사 실패:', err);
+                    alert('복사에 실패했습니다. 다시 시도해주세요.');
+                });
+            } else {
+                // 구형 브라우저 대응
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                textArea.style.position = 'fixed';
+                textArea.style.left = '-999999px';
+                document.body.appendChild(textArea);
+                textArea.select();
+                
+                try {
+                    document.execCommand('copy');
+                    alert('✅ 복사가 완료되었습니다!\n\n다른 곳에 붙여넣으세요. 📋');
+                } catch (err) {
+                    alert('복사에 실패했습니다. 수동으로 복사해주세요.');
+                }
+                
+                document.body.removeChild(textArea);
+            }
+        }
+    </script>
+</body>
+</html>

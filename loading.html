@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>궁합 분석 중... - 궁합도사</title>
+    
+    <!-- SEO 메타 태그 -->
+    <meta name="robots" content="noindex, nofollow">
+    
+    <!-- Google Fonts - 한글 세리프 폰트 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-HCWXTWEK1J"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-HCWXTWEK1J');
+    </script>
+    
+    <!-- Microsoft Clarity -->
+    <script type="text/javascript">
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "tmue9ya7ho");
+    </script>
+    
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2635949625184038" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="loading-container">
+            <div class="loading-header">
+                <h1 class="logo">궁합도사</h1>
+            </div>
+
+            <!-- 로딩 애니메이션 -->
+            <div class="loading-animation">
+                <div class="loading-spinner"></div>
+            </div>
+
+            <div class="loading-text">
+                <h2>음양오행을 해석하는 중...</h2>
+                <p class="loading-message">사주팔자를 살펴보고 있습니다</p>
+                <div class="loading-dots">
+                    <span>.</span><span>.</span><span>.</span>
+                </div>
+            </div>
+
+            <!-- 자동 이동 안내 -->
+            <div class="loading-notice">
+                <p>분석이 완료되면 자동으로 통변으로 넘어갑니다.</p>
+                <p class="loading-notice-sub">사용량이 많으면 시간이 더 늘어날 수 있습니다.</p>
+            </div>
+
+            <!-- 입력된 정보 표시 -->
+            <div class="loading-info-display" id="birthInfoDisplay">
+                <!-- JavaScript로 동적 생성 -->
+            </div>
+
+            <!-- ============================================ -->
+            <!-- 광고 노출 포인트 1: 로딩 중 광고 (가장 중요!) -->
+            <!-- ============================================ -->
+            <div class="ad-container ad-loading">
+                <!-- 
+                    여기에 Google AdSense 광고 코드를 삽입하세요
+                    권장: 디스플레이 광고 (320x100 또는 반응형)
+                    
+                    예시:
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+                         data-ad-slot="1234567890"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>
+                         (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                -->
+                <!-- 궁합도사_로딩 -->
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-2635949625184038"
+                     data-ad-slot="8702896454"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <!-- AdSense 승인 전 임시 표시 -->
+                <div style="background: #f0f0f0; padding: 20px; text-align: center; border: 2px dashed #ccc; margin: 10px 0;">
+                    <p style="color: #666; font-size: 14px;">📢 광고 영역</p>
+                    <p style="color: #999; font-size: 12px;">AdSense 승인 후 광고가 표시됩니다</p>
+                </div>
+                <script>
+                     (adsbygoogle = window.adsbygoogle || []).push({});
+                     
+                     // AdSense 승인 후 임시 표시 숨기기
+                     setTimeout(function() {
+                         const tempAds = document.querySelectorAll('.ad-container div[style*="background: #f0f0f0"]');
+                         tempAds.forEach(function(ad) {
+                             if (ad.textContent.includes('📢 광고 영역')) {
+                                 ad.style.display = 'none';
+                             }
+                         });
+                     }, 3000);
+                </script>
+            </div>
+
+            <div class="loading-info">
+                <p>사주팔자를 분석하고 있습니다</p>
+                <p>오행의 조화를 계산하고 있습니다</p>
+                <p>궁합 점수를 산출하고 있습니다</p>
+            </div>
+
+            <!-- 궁합 원리 설명 (지루함 방지) -->
+            <div class="principle-section-loading">
+                <h3>사주 궁합의 원리</h3>
+                
+                <div class="principle-item">
+                    <div class="principle-content">
+                        <h4>사주팔자(四柱八字)의 비밀</h4>
+                        <p>우리가 태어난 순간의 <strong>연(年), 월(月), 일(日), 시(時)</strong> 네 기둥을 사주(四柱)라 하며, 각각 천간(天干)과 지지(地支) 두 글자씩 총 여덟 글자로 이루어져 사주팔자라고 합니다. 이는 천 년이 넘는 시간 동안 검증된 동양 철학의 정수입니다.</p>
+                    </div>
+                </div>
+
+                <div class="principle-item">
+                    <div class="principle-content">
+                        <h4>음양오행(陰陽五行)의 조화</h4>
+                        <p>사주팔자는 <strong>목(木), 화(火), 토(土), 금(金), 수(水)</strong> 다섯 가지 기운의 균형으로 해석됩니다. 두 사람의 오행이 상생(相生) 관계라면 서로를 도와 발전하고, 상극(相剋) 관계라면 갈등이 생길 수 있습니다. 궁합은 이러한 에너지의 조화를 분석하는 것입니다.</p>
+                    </div>
+                </div>
+
+                <div class="principle-item">
+                    <div class="principle-content">
+                        <h4>태어난 시간이 중요한 이유</h4>
+                        <p>같은 날 태어나도 시간에 따라 <strong>시주(時柱)</strong>가 달라집니다. 시주는 개인의 성격, 사고방식, 행동 패턴을 나타내는 중요한 요소입니다. 특히 부부 관계에서는 일상적인 소통과 생활 방식이 중요하기에, 시주의 조화가 궁합에 큰 영향을 미칩니다.</p>
+                    </div>
+                </div>
+
+                <div class="principle-item">
+                    <div class="principle-content">
+                        <h4>과학적 근거와 통계</h4>
+                        <p>현대 연구에서도 <strong>계절, 시간대별 출생이 성격에 영향</strong>을 준다는 결과가 있습니다. 태어날 때의 환경적 요인(온도, 습도, 빛의 양 등)이 호르몬 분비와 뇌 발달에 영향을 줄 수 있다는 것입니다. 사주 궁합은 이러한 선천적 기질의 조화를 살피는 지혜입니다.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // localStorage에서 결과 확인 및 정보 표시
+        function checkResultAndRedirect() {
+            const result = localStorage.getItem('compatibilityResult');
+            
+            if (result) {
+                try {
+                    const parsedResult = JSON.parse(result);
+                    console.log('로딩 페이지에서 확인된 결과:', parsedResult);
+                    
+                    // 입력된 정보 표시
+                    displayBirthInfo(parsedResult);
+                    
+                    // 10.5초 후 요약 페이지로 이동 (광고 노출 시간 증가)
+                    setTimeout(function() {
+                        window.location.href = 'summary.html';
+                    }, 10500);
+                } catch (error) {
+                    console.error('결과 파싱 오류:', error);
+                    alert('결과 처리 중 오류가 발생했습니다. 다시 시도해주세요.');
+                    window.location.href = 'index.html';
+                }
+            } else {
+                console.error('localStorage에 결과가 없습니다.');
+                alert('궁합 분석 결과를 찾을 수 없습니다. 다시 시도해주세요.');
+                window.location.href = 'index.html';
+            }
+        }
+        
+        // 입력된 정보 및 사주팔자 표시
+        function displayBirthInfo(result) {
+            const displayDiv = document.getElementById('birthInfoDisplay');
+            if (!displayDiv) return;
+            
+            const maleName = result.maleName || '남성';
+            const femaleName = result.femaleName || '여성';
+            const maleSaju = result.maleSaju || {};
+            const femaleSaju = result.femaleSaju || {};
+            
+            const html = `
+                <div class="birth-info-card">
+                    <h3>사주팔자 분석 중</h3>
+                    <div class="person-info">
+                        <div class="person-saju">
+                            <div class="person-name">${maleName}님</div>
+                            <div class="saju-pillars">
+                                <div class="pillar-item">
+                                    <span class="pillar-label">연주</span>
+                                    <span class="pillar-value">${maleSaju.year || ''}</span>
+                                </div>
+                                <div class="pillar-item">
+                                    <span class="pillar-label">월주</span>
+                                    <span class="pillar-value">${maleSaju.month || ''}</span>
+                                </div>
+                                <div class="pillar-item">
+                                    <span class="pillar-label">일주</span>
+                                    <span class="pillar-value highlight">${maleSaju.day || ''}</span>
+                                </div>
+                                <div class="pillar-item">
+                                    <span class="pillar-label">시주</span>
+                                    <span class="pillar-value">${maleSaju.time || ''}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="person-saju">
+                            <div class="person-name">${femaleName}님</div>
+                            <div class="saju-pillars">
+                                <div class="pillar-item">
+                                    <span class="pillar-label">연주</span>
+                                    <span class="pillar-value">${femaleSaju.year || ''}</span>
+                                </div>
+                                <div class="pillar-item">
+                                    <span class="pillar-label">월주</span>
+                                    <span class="pillar-value">${femaleSaju.month || ''}</span>
+                                </div>
+                                <div class="pillar-item">
+                                    <span class="pillar-label">일주</span>
+                                    <span class="pillar-value highlight">${femaleSaju.day || ''}</span>
+                                </div>
+                                <div class="pillar-item">
+                                    <span class="pillar-label">시주</span>
+                                    <span class="pillar-value">${femaleSaju.time || ''}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            displayDiv.innerHTML = html;
+        }
+        
+        // 페이지 로드 시 확인
+        document.addEventListener('DOMContentLoaded', checkResultAndRedirect);
+    </script>
+</body>
+</html>
+
