@@ -32,6 +32,16 @@
     </script>
     
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2635949625184038" crossorigin="anonymous"></script>
+    <script>
+        // AdSense 스크립트 로드 완료 확인
+        window.addEventListener('load', function() {
+            if (typeof adsbygoogle === 'undefined') {
+                console.log('Loading - AdSense 스크립트 로드 대기 중...');
+            } else {
+                console.log('Loading - AdSense 스크립트 로드 완료');
+            }
+        });
+    </script>
     <link rel="stylesheet" href="static/style.css">
 </head>
 <body>
@@ -69,21 +79,6 @@
             <!-- 광고 노출 포인트 1: 로딩 중 광고 (가장 중요!) -->
             <!-- ============================================ -->
             <div class="ad-container ad-loading">
-                <!-- 
-                    여기에 Google AdSense 광고 코드를 삽입하세요
-                    권장: 디스플레이 광고 (320x100 또는 반응형)
-                    
-                    예시:
-                    <ins class="adsbygoogle"
-                         style="display:block"
-                         data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
-                         data-ad-slot="1234567890"
-                         data-ad-format="auto"
-                         data-full-width-responsive="true"></ins>
-                    <script>
-                         (adsbygoogle = window.adsbygoogle || []).push({});
-                    </script>
-                -->
                 <!-- 궁합도사_로딩 -->
                 <ins class="adsbygoogle"
                      style="display:block"
@@ -91,24 +86,6 @@
                      data-ad-slot="8702896454"
                      data-ad-format="auto"
                      data-full-width-responsive="true"></ins>
-                <!-- AdSense 승인 전 임시 표시 -->
-                <div style="background: #f0f0f0; padding: 20px; text-align: center; border: 2px dashed #ccc; margin: 10px 0;">
-                    <p style="color: #666; font-size: 14px;">📢 광고 영역</p>
-                    <p style="color: #999; font-size: 12px;">AdSense 승인 후 광고가 표시됩니다</p>
-                </div>
-                <script>
-                     (adsbygoogle = window.adsbygoogle || []).push({});
-                     
-                     // AdSense 승인 후 임시 표시 숨기기
-                     setTimeout(function() {
-                         const tempAds = document.querySelectorAll('.ad-container div[style*="background: #f0f0f0"]');
-                         tempAds.forEach(function(ad) {
-                             if (ad.textContent.includes('📢 광고 영역')) {
-                                 ad.style.display = 'none';
-                             }
-                         });
-                     }, 3000);
-                </script>
             </div>
 
             <div class="loading-info">
@@ -244,8 +221,34 @@
             displayDiv.innerHTML = html;
         }
         
-        // 페이지 로드 시 확인
-        document.addEventListener('DOMContentLoaded', checkResultAndRedirect);
+        // AdSense 광고 초기화
+        function initLoadingAds() {
+            try {
+                const ads = document.querySelectorAll('.adsbygoogle');
+                console.log('Loading 페이지 - 발견된 광고 개수:', ads.length);
+                
+                ads.forEach(function(ad, index) {
+                    try {
+                        console.log('Loading 광고 초기화 중:', index + 1);
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                    } catch (e) {
+                        console.error('Loading 광고 초기화 실패:', index + 1, e);
+                    }
+                });
+                
+                console.log('Loading AdSense 광고 초기화 완료');
+            } catch (e) {
+                console.error('Loading AdSense 초기화 오류:', e);
+            }
+        }
+        
+        // 페이지 로드 시 확인 및 광고 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            checkResultAndRedirect();
+            
+            // 광고 초기화 (로딩 페이지는 빠르게 이동하므로 즉시 실행)
+            setTimeout(initLoadingAds, 100);
+        });
     </script>
 </body>
 </html>
