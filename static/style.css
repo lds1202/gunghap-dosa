@@ -1534,3 +1534,64 @@ svg defs linearGradient {
         border: 1px solid #ddd;
     }
 }
+
+/* 시간 정보 안내 스타일 */
+.time-info-notice {
+    background: linear-gradient(135deg, #fef3c7, #fde68a);
+    border: 2px solid #f59e0b;
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-md);
+    margin: var(--spacing-md) 0;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    box-shadow: 0 4px 6px rgba(245, 158, 11, 0.1);
+}
+
+.notice-icon {
+    font-size: var(--font-xl);
+    color: #d97706;
+    flex-shrink: 0;
+}
+
+.notice-content {
+    flex: 1;
+}
+
+.notice-title {
+    font-size: var(--font-base);
+    font-weight: 700;
+    color: #92400e;
+    margin: 0 0 var(--spacing-xs) 0;
+    font-family: 'Noto Serif KR', serif;
+}
+
+.notice-text {
+    font-size: var(--font-sm);
+    color: #a16207;
+    margin: 0;
+    line-height: 1.5;
+    font-family: 'Noto Serif KR', serif;
+}
+
+@media (max-width: 768px) {
+    .time-info-notice {
+        padding: var(--spacing-sm);
+        margin: var(--spacing-sm) 0;
+        flex-direction: column;
+        text-align: center;
+        gap: var(--spacing-xs);
+    }
+    
+    .notice-icon {
+        font-size: var(--font-lg);
+    }
+    
+    .notice-title {
+        font-size: var(--font-sm);
+    }
+    
+    .notice-text {
+        font-size: var(--font-xs);
+    }
+}

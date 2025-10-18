@@ -114,21 +114,29 @@ class SajuAnalyzer {
         // 날짜 파싱
         const birthDate = new Date(birthdate);
         
-        // 시간 파싱
-        const timeParts = birthtime.split(':');
-        const hour = parseInt(timeParts[0]);
-        
         // 사주 계산
         const [yearCheongan, yearJiji] = this.getYearPillar(birthDate.getFullYear());
         const [monthCheongan, monthJiji] = this.getMonthPillar(birthDate.getMonth() + 1);
         const [dayCheongan, dayJiji] = this.getDayPillar(birthDate);
-        const [timeCheongan, timeJiji] = this.getTimePillar(hour);
+        
+        // 시간 파싱 - 'unknown' 처리
+        let timeCheongan, timeJiji;
+        if (birthtime === 'unknown') {
+            // 시간을 모를 경우 빈 값으로 설정
+            timeCheongan = '';
+            timeJiji = '';
+        } else {
+            const timeParts = birthtime.split(':');
+            const hour = parseInt(timeParts[0]);
+            [timeCheongan, timeJiji] = this.getTimePillar(hour);
+        }
         
         return {
             year: [yearCheongan, yearJiji],
             month: [monthCheongan, monthJiji],
             day: [dayCheongan, dayJiji],
-            time: [timeCheongan, timeJiji]
+            time: [timeCheongan, timeJiji],
+            timeUnknown: birthtime === 'unknown'
         };
     }
     
@@ -246,23 +254,43 @@ class SajuAnalyzer {
         
         const [monthRel, monthScore] = this.checkElementRelationship(maleMonthElemCheongan, femaleMonthElemCheongan);
         
-        // 시주 관계 점수 추가
-        const [maleTimeCheongan, maleTimeJiji] = maleSaju.time;
-        const [femaleTimeCheongan, femaleTimeJiji] = femaleSaju.time;
+        // 시간 정보가 '모름'인 경우 점수 계산 방식 조정
+        const maleTimeUnknown = maleSaju.timeUnknown || false;
+        const femaleTimeUnknown = femaleSaju.timeUnknown || false;
+        const hasUnknownTime = maleTimeUnknown || femaleTimeUnknown;
         
-        const [maleTimeElemCheongan] = this.getElement(maleTimeCheongan, maleTimeJiji);
-        const [femaleTimeElemCheongan] = this.getElement(femaleTimeCheongan, femaleTimeJiji);
+        // 시주 관계 점수 추가 (시간을 알 경우만)
+        let timeRel = 'unknown';
+        let timeScore = 60; // 기본값
         
-        const [timeRel, timeScore] = this.checkElementRelationship(maleTimeElemCheongan, femaleTimeElemCheongan);
+        if (!maleTimeUnknown && !femaleTimeUnknown) {
+            const [maleTimeCheongan, maleTimeJiji] = maleSaju.time;
+            const [femaleTimeCheongan, femaleTimeJiji] = femaleSaju.time;
+            
+            const [maleTimeElemCheongan] = this.getElement(maleTimeCheongan, maleTimeJiji);
+            const [femaleTimeElemCheongan] = this.getElement(femaleTimeCheongan, femaleTimeJiji);
+            
+            [timeRel, timeScore] = this.checkElementRelationship(maleTimeElemCheongan, femaleTimeElemCheongan);
+        }
         
-        // 종합 점수 계산 (일주 40%, 월주 25%, 연주 20%, 시주 15%)
-        // 사주팔자 전체를 고려한 더 정확한 궁합 분석
-        let totalScore = Math.round(
-            cheonganScore * 0.4 + 
-            monthScore * 0.25 + 
-            yearScore * 0.2 + 
-            timeScore * 0.15
-        );
+        // 종합 점수 계산
+        let totalScore;
+        if (hasUnknownTime) {
+            // 시간을 모를 경우: 일주 50%, 월주 30%, 연주 20% (시주 제외)
+            totalScore = Math.round(
+                cheonganScore * 0.5 + 
+                monthScore * 0.3 + 
+                yearScore * 0.2
+            );
+        } else {
+            // 시간을 알 경우: 일주 40%, 월주 25%, 연주 20%, 시주 15%
+            totalScore = Math.round(
+                cheonganScore * 0.4 + 
+                monthScore * 0.25 + 
+                yearScore * 0.2 + 
+                timeScore * 0.15
+            );
+        }
         
         // 신뢰성을 위해 랜덤성 제거 - 동일한 입력에 대해 항상 같은 결과
         totalScore = Math.min(100, Math.max(0, totalScore));
@@ -293,15 +321,21 @@ class SajuAnalyzer {
                 year: `${maleYearCheongan}${maleYearJiji}`,
                 month: `${maleMonthCheongan}${maleMonthJiji}`,
                 day: `${maleDayCheongan}${maleDayJiji}`,
-                time: `${maleTimeCheongan}${maleTimeJiji}`
+                time: maleTimeUnknown ? '모름' : (maleSaju.time[0] && maleSaju.time[1] ? `${maleSaju.time[0]}${maleSaju.time[1]}` : '모름')
             },
             femaleSaju: {
                 year: `${femaleYearCheongan}${femaleYearJiji}`,
                 month: `${femaleMonthCheongan}${femaleMonthJiji}`,
                 day: `${femaleDayCheongan}${femaleDayJiji}`,
-                time: `${femaleTimeCheongan}${femaleTimeJiji}`
+                time: femaleTimeUnknown ? '모름' : (femaleSaju.time[0] && femaleSaju.time[1] ? `${femaleSaju.time[0]}${femaleSaju.time[1]}` : '모름')
             },
-            complement: complement
+            complement: complement,
+            timeInfo: {
+                maleTimeUnknown: maleTimeUnknown,
+                femaleTimeUnknown: femaleTimeUnknown,
+                hasUnknownTime: hasUnknownTime,
+                timeAccuracy: hasUnknownTime ? '출생 시간 정보가 없어 일주, 월주, 연주 기반으로 분석했습니다. 시주(時柱) 정보가 없어 자녀운 분석의 정확도가 제한될 수 있습니다.' : '사주팔자 전체 정보를 바탕으로 분석했습니다.'
+            }
         };
     }
     
@@ -442,9 +476,11 @@ class SajuAnalyzer {
         } else if (score >= 70) {
             return `${maleName}님과 ${femaleName}님은 매우 좋은 궁합입니다! 🌟 서로를 이해하고 배려하는 마음으로 아름다운 관계를 만들어갈 수 있습니다.`;
         } else if (score >= 55) {
-            return `${maleName}님과 ${femaleName}님은 평범하지만 안정적인 궁합입니다. 😊 노력과 이해를 통해 좋은 관계로 발전할 수 있습니다.`;
+            return `${maleName}님과 ${femaleName}님은 평범한 궁합입니다. 😊 서로 다른 면이 있어 갈등이 있을 수 있으나, 이해와 노력으로 극복 가능합니다.`;
+        } else if (score >= 40) {
+            return `${maleName}님과 ${femaleName}님은 다소 어려운 궁합입니다. ⚠️ 성격과 가치관 차이로 인한 갈등이 빈번할 수 있으며, 각별한 노력이 필요합니다.`;
         } else {
-            return `${maleName}님과 ${femaleName}님은 서로 다른 면이 많은 궁합입니다. 🤔 하지만 서로를 보완하며 성장할 수 있는 기회가 될 수 있습니다.`;
+            return `${maleName}님과 ${femaleName}님은 상극한 궁합입니다. 🔥 사주상 큰 갈등과 어려움이 예상되며, 관계 유지에 많은 인내와 이해가 필요합니다.`;
         }
     }
     
@@ -487,12 +523,14 @@ class SajuAnalyzer {
         }
         
         // 4. 자녀운 (사주 전체 조화)
+        const timeInfoNote = this.getTimeInfoNote(timeRel, maleName, femaleName);
+        
         if (score >= 75) {
-            details.children = `【자녀운 분석】\n\n사주팔자의 전체적인 조화가 뛰어나 자녀운이 매우 길합니다. 임신과 출산이 순조로우며, 건강하고 총명한 자녀를 얻을 수 있는 사주입니다. 자녀복이 두터워 노년에 큰 효도를 받을 수 있습니다.\n\n${maleName}님과 ${femaleName}님 모두 부모로서의 자질이 훌륭하며, 자녀 교육에서도 탁월한 성과를 거둘 수 있습니다. 특히 자녀가 학업이나 사회생활에서 성공할 가능성이 높으며, 부모 자식 간의 정이 깊어 평생 좋은 관계를 유지합니다.\n\n👶 육아 조언: 사랑과 존중으로 자녀를 대하되, 적절한 훈육도 필요합니다. 자녀의 재능을 일찍 발견하고 키워주세요. 부부가 교육관을 통일하는 것이 중요합니다.`;
+            details.children = `【자녀운 분석】\n\n사주팔자의 전체적인 조화가 뛰어나 자녀운이 매우 길합니다. 임신과 출산이 순조로우며, 건강하고 총명한 자녀를 얻을 수 있는 사주입니다. 자녀복이 두터워 노년에 큰 효도를 받을 수 있습니다.\n\n${maleName}님과 ${femaleName}님 모두 부모로서의 자질이 훌륭하며, 자녀 교육에서도 탁월한 성과를 거둘 수 있습니다. 특히 자녀가 학업이나 사회생활에서 성공할 가능성이 높으며, 부모 자식 간의 정이 깊어 평생 좋은 관계를 유지합니다.\n\n${timeInfoNote}\n\n👶 육아 조언: 사랑과 존중으로 자녀를 대하되, 적절한 훈육도 필요합니다. 자녀의 재능을 일찍 발견하고 키워주세요. 부부가 교육관을 통일하는 것이 중요합니다.`;
         } else if (score >= 55) {
-            details.children = `【자녀운 분석】\n\n자녀운은 평범하지만 안정적입니다. 자녀와의 관계에서 간혹 세대 차이로 인한 갈등이 있을 수 있으나, 대화와 이해로 충분히 풀어갈 수 있습니다. 자녀에게 과도한 기대를 걸기보다는 있는 그대로를 인정하고 격려하는 것이 중요합니다.\n\n사주상 자녀가 부모의 뜻대로 따라주지 않을 수 있으나, 이는 자녀의 독립성과 자주성이 강하다는 의미입니다. 억압하기보다는 존중하고 믿어주는 것이 좋은 관계의 비결입니다.\n\n👶 육아 조언: 자녀와 자주 대화하고 관심을 보이세요. 비교하지 말고 칭찬을 많이 해주세요. 부부가 서로 다른 교육 방식을 보이면 자녀가 혼란스러워하니 사전 합의가 중요합니다.`;
+            details.children = `【자녀운 분석】\n\n자녀운은 평범하지만 안정적입니다. 자녀와의 관계에서 간혹 세대 차이로 인한 갈등이 있을 수 있으나, 대화와 이해로 충분히 풀어갈 수 있습니다. 자녀에게 과도한 기대를 걸기보다는 있는 그대로를 인정하고 격려하는 것이 중요합니다.\n\n사주상 자녀가 부모의 뜻대로 따라주지 않을 수 있으나, 이는 자녀의 독립성과 자주성이 강하다는 의미입니다. 억압하기보다는 존중하고 믿어주는 것이 좋은 관계의 비결입니다.\n\n${timeInfoNote}\n\n👶 육아 조언: 자녀와 자주 대화하고 관심을 보이세요. 비교하지 말고 칭찬을 많이 해주세요. 부부가 서로 다른 교육 방식을 보이면 자녀가 혼란스러워하니 사전 합의가 중요합니다.`;
         } else {
-            details.children = `【자녀운 분석】\n\n자녀운에서 인내와 노력이 필요한 배치입니다. 임신이나 육아 과정에서 어려움이 있을 수 있으며, 자녀와의 소통에도 각별한 주의가 필요합니다. 사주상 부모와 자녀 간의 성향 차이가 클 수 있어 이해와 포용이 중요합니다.\n\n자녀가 반항기를 겪거나 의견 충돌이 있을 때, 감정적으로 대응하지 말고 이성적으로 접근해야 합니다. 어린 시절부터 꾸준한 애정 표현과 스킨십으로 유대감을 쌓는 것이 중요합니다.\n\n👶 육아 조언: 체벌보다는 대화로 훈육하세요. 부부가 교육 방식을 통일하고 일관성을 유지하세요. 자녀의 말에 귀 기울이고, 부모의 생각을 강요하지 마세요. 전문가의 도움을 받는 것도 좋습니다.`;
+            details.children = `【자녀운 분석】\n\n자녀운에서 인내와 노력이 필요한 배치입니다. 임신이나 육아 과정에서 어려움이 있을 수 있으며, 자녀와의 소통에도 각별한 주의가 필요합니다. 사주상 부모와 자녀 간의 성향 차이가 클 수 있어 이해와 포용이 중요합니다.\n\n자녀가 반항기를 겪거나 의견 충돌이 있을 때, 감정적으로 대응하지 말고 이성적으로 접근해야 합니다. 어린 시절부터 꾸준한 애정 표현과 스킨십으로 유대감을 쌓는 것이 중요합니다.\n\n${timeInfoNote}\n\n👶 육아 조언: 체벌보다는 대화로 훈육하세요. 부부가 교육 방식을 통일하고 일관성을 유지하세요. 자녀의 말에 귀 기울이고, 부모의 생각을 강요하지 마세요. 전문가의 도움을 받는 것도 좋습니다.`;
         }
         
         // 5. 궁합 총평 (사주팔자 종합 분석)
@@ -502,8 +540,10 @@ class SajuAnalyzer {
             details.overall = `【궁합 총평】\n\n${maleName}님과 ${femaleName}님은 매우 좋은 궁합으로, 상생지복(相生之福)의 인연입니다.\n\n사주팔자를 종합적으로 분석한 결과, 대부분의 주(柱)가 조화롭게 배치되어 있습니다. 완벽한 궁합은 아니지만, 서로에 대한 이해와 배려가 깊어질수록 더욱 행복한 관계로 발전할 수 있습니다.\n\n때로는 의견 차이나 작은 갈등이 있을 수 있으나, 이는 두 사람이 서로 다른 개성을 가진 독립적인 존재라는 자연스러운 현상입니다. 대화와 타협으로 풀어간다면 오래도록 행복한 시간을 보낼 수 있으며, 중년 이후 더욱 깊은 정이 쌓입니다.\n\n✨ 조언: 상대방의 입장에서 생각하는 습관을 들이세요. 작은 배려와 관심이 큰 사랑을 만듭니다.`;
         } else if (score >= 55) {
             details.overall = `【궁합 총평】\n\n두 분의 궁합은 중간 정도로, 평범하지만 노력과 이해로 충분히 좋은 관계를 만들 수 있습니다.\n\n사주상 일부 주(柱)에서 충(沖)이나 극(剋)의 기운이 있어 가끔 어려움이 있을 수 있습니다. 하지만 이는 극복 불가능한 것이 아니며, 오히려 서로를 더 깊이 이해하고 성장하는 계기가 될 수 있습니다.\n\n서로 다른 점을 단점이 아닌 다양성으로 받아들이고, 함께 성장하는 자세가 필요합니다. 급하게 서두르지 말고 천천히 관계를 쌓아가며, 신뢰를 바탕으로 한다면 평생의 반려자가 될 수 있습니다.\n\n✨ 조언: 갈등이 생겼을 때 회피하지 말고 정면으로 대화하세요. 사랑과 인내심을 가지고 관계를 가꾸어 나가세요.`;
+        } else if (score >= 40) {
+            details.overall = `【궁합 총평】\n\n${maleName}님과 ${femaleName}님은 사주상 다소 어려운 궁합입니다.\n\n사주팔자를 보면 상당 부분에서 상극(相剋)이나 충(沖)의 기운이 있어 갈등이나 의견 차이가 빈번할 수 있습니다. 성격, 가치관, 생활 방식에서 큰 차이를 느낄 수 있으며, 이로 인한 스트레스와 갈등이 예상됩니다.\n\n특히 경제관념, 가족관, 자녀교육 등 중요한 부분에서 의견 충돌이 있을 수 있으며, 서로를 이해하기 어려운 상황이 자주 발생할 수 있습니다. 하지만 진정한 사랑과 각별한 노력이 있다면 관계를 유지할 수 있습니다.\n\n⚠️ 주의사항: 감정적인 대응보다는 이성적인 대화가 필요합니다. 상대방을 바꾸려 하지 말고 있는 그대로 받아들이는 자세가 중요합니다. 전문 상담사의 도움을 적극적으로 고려해보세요.`;
         } else {
-            details.overall = `【궁합 총평】\n\n${maleName}님과 ${femaleName}님은 사주상 다소 차이가 있는 궁합이지만, 이는 서로를 보완할 수 있는 기회가 될 수 있습니다.\n\n사주팔자를 보면 일부 주(柱)에서 상극(相剋)이나 충(沖)의 기운이 있어 갈등이나 의견 차이가 빈번할 수 있습니다. 성격, 가치관, 생활 방식에서 차이를 느낄 수 있으며, 이로 인한 스트레스가 있을 수 있습니다.\n\n하지만 사주가 전부는 아닙니다. 현대 사주학에서는 '궁합보다 중요한 것은 두 사람의 노력'이라고 말합니다. 갈등이 생길 때 감정적으로 대응하지 말고 이성적으로 대화하며, 서로의 입장을 존중하는 자세가 중요합니다. 진심을 다한다면 어려움을 극복하고 좋은 관계를 만들 수 있습니다.\n\n✨ 조언: 상대방을 바꾸려 하지 말고 있는 그대로 받아들이세요. 전문 상담사의 도움을 받는 것도 좋은 방법입니다.`;
+            details.overall = `【궁합 총평】\n\n${maleName}님과 ${femaleName}님은 사주상 상극한 궁합으로, 관계 유지에 많은 어려움이 예상됩니다.\n\n사주팔자를 종합적으로 보면 대부분의 주(柱)에서 상극(相剋)이나 충(沖)의 기운이 강하게 나타나며, 이는 두 사람 간의 근본적인 성격 차이와 가치관 충돌을 의미합니다. 일상적인 대화에서도 의견 충돌이 빈번하고, 서로를 이해하기 어려운 상황이 지속될 수 있습니다.\n\n경제관념, 가족관계, 자녀교육, 취미, 친구관계 등 삶의 전반적인 영역에서 갈등이 예상되며, 이러한 갈등이 누적되면 관계 파탄으로 이어질 가능성이 높습니다. 단순한 애정만으로는 한계가 있을 수 있습니다.\n\n🔥 솔직한 조언: 이 궁합은 현실적으로 매우 어려운 관계입니다. 만약 진정한 사랑이라면 각별한 노력과 전문가의 도움이 반드시 필요합니다. 하지만 무리하게 관계를 유지하려 하기보다는 신중한 판단이 필요할 수 있습니다.`;
         }
         
         return details;
@@ -547,6 +587,17 @@ class SajuAnalyzer {
         };
         
         return descriptions[relationship] || `${pillarName}의 기운은`;
+    }
+    
+    /**
+     * 시간 정보 부족 시 안내 메시지 생성
+     */
+    getTimeInfoNote(timeRel, maleName, femaleName) {
+        if (timeRel === 'unknown') {
+            // 시간 정보가 없는 경우의 안내
+            return `\n⚠️ 참고사항: ${maleName}님 또는 ${femaleName}님의 출생 시간 정보가 없어 정확한 자녀운 분석이 어려운 점이 있습니다. 사주팔자에서 시주(時柱)는 자녀운과 직결되는 중요한 요소로, 정확한 출생 시간을 알면 더욱 정밀한 분석이 가능합니다. 현재는 일주, 월주, 연주 기반으로 분석된 결과입니다.`;
+        }
+        return '';
     }
 }
 
